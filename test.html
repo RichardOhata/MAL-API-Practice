@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input id="inputField" type="text" placeholder="Find Anime: "> 
+    <button onclick="sendFetchRequest()">Send Fetch Request</button>
+    <div id="result"></div>
+    <script>
+        function sendFetchRequest() {
+            let inputVal = document.getElementById("inputField").value;
+            const options = {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({inputVal})
+            };
+            fetch("http://localhost:3000/test", options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                let result = document.getElementById('result');
+                while(result.firstChild) {
+                    result.removeChild(result.firstChild);
+                }
+                console.log(data.data); // Log the response data
+                data.data.forEach(element => {
+                    console.log(element.node.title);
+
+                    const anime  =document.createElement('p');
+                    anime.textContent = element.node.title;
+                    result.appendChild(anime);
+                });
+                // Handle the response data as needed
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
